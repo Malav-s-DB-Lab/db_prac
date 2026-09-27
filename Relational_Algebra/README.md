@@ -129,3 +129,9 @@ Once you commit and push your attempts for all 9 questions:
 1. The automated autograder verifies all 9 problems are submitted.
 2. It automatically **commits the official reference solutions directly into your repository** under the [`Relational_Algebra/solutions/`](solutions/) folder!
 3. You can also download them as a zip artifact from your latest workflow run in the **Actions** tab.
+
+> [!IMPORTANT]
+> **External Forks & Solution Access Notice:**  
+> Anyone can open this project and test their solutions for free. However, if you are practicing on an **external fork**, GitHub security automatically restricts access to the encrypted solutions vault to prevent piracy.  
+> If you have attempted all 9 problems and want to unlock the official solutions, please contact the repository owner ([@Malav786](https://github.com/Malav786)) to be invited as an authorized member of **Malav's DB Lab**!
+

@@ -56,3 +56,9 @@ To encourage independent problem solving, reference solutions are locked by defa
 2. Commit and push your code to GitHub.
 3. The autograding bot will verify that all 9 questions have been attempted, and will **automatically commit the official reference solutions directly into your repository** under the [`Relational_Algebra/solutions/`](Relational_Algebra/solutions/) folder!
 4. You can also download them as a zip artifact from your latest run in the **Actions** tab.
+
+> [!IMPORTANT]
+> **External Forks & Solution Access Notice:**  
+> Anyone can open this project and test their solutions for free. However, if you are practicing on an **external fork**, GitHub security automatically restricts access to the encrypted solutions vault to prevent piracy.  
+> If you have attempted all 9 problems and want to unlock the official solutions, please contact the repository owner ([@Malav786](https://github.com/Malav786)) to be invited as an authorized member of **Malav's DB Lab**!
+

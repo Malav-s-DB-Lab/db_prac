@@ -277,8 +277,12 @@ jobs:
           echo "Official reference solutions have been unlocked! They are committed into \`Relational_Algebra/solutions/\` and available as a downloadable zip artifact (**reference-solutions**) below." >> $GITHUB_STEP_SUMMARY
         else
           if [ "$ATTEMPTED_COUNT" -eq 9 ]; then
-            echo "### Notice" >> $GITHUB_STEP_SUMMARY
-            echo "All 9 problems attempted, but the solutions payload secret is not available. Please verify organization secrets." >> $GITHUB_STEP_SUMMARY
+            echo "### 🔒 Solutions Locked (External Fork Detected)" >> $GITHUB_STEP_SUMMARY
+            echo "Great job! You have submitted an attempt for all 9 problems." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "However, you are running this workflow from an **external fork**. GitHub security automatically restricts forks from accessing the organization's encrypted solutions vault." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Want official solution access?** Please contact the repository owner ([@Malav786](https://github.com/Malav786)) to be invited to **Malav's DB Lab**!" >> $GITHUB_STEP_SUMMARY
           else
             echo "### Reference Solutions Locked" >> $GITHUB_STEP_SUMMARY
             echo "Progress: **$ATTEMPTED_COUNT / 9** problems attempted. Submit an attempt for all 9 problems to unlock the reference solutions!" >> $GITHUB_STEP_SUMMARY
