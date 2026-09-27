@@ -10,11 +10,12 @@ on:
 permissions:
   checks: write
   actions: read
-  contents: read
+  contents: write
 
 jobs:
   run-autograding-tests:
     runs-on: ubuntu-latest
+    if: github.actor != 'Malav786'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -226,12 +227,27 @@ jobs:
         if [ "$ATTEMPTED_COUNT" -eq 9 ]; then
           if [ -n "$SOLUTIONS_PAYLOAD" ]; then
             echo "All 9 problems attempted! Unlocking solutions..."
-            mkdir -p unlocked_solutions
+            mkdir -p unlocked_solutions Relational_Algebra/solutions
             echo "$SOLUTIONS_PAYLOAD" | base64 -d > solutions.zip
-            unzip -q solutions.zip -d unlocked_solutions/
+            unzip -o solutions.zip -d Relational_Algebra/solutions/
+            cp -r Relational_Algebra/solutions/* unlocked_solutions/
+            rm solutions.zip
             echo "UNLOCKED=true" >> $GITHUB_ENV
+
+            # Commit solutions directly into the student repository
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add Relational_Algebra/solutions
+            if git diff --staged --quiet; then
+              echo "Solutions already committed."
+            else
+              git commit -m "🎉 Unlocked: Official Reference Solutions for all 9 problems"
+              git push
+            fi
+
             echo "### 🎉 All 9 Problems Attempted!" >> $GITHUB_STEP_SUMMARY
-            echo "Official reference solutions have been unlocked and attached as a downloadable artifact (**reference-solutions**) at the top of this run summary." >> $GITHUB_STEP_SUMMARY
+            echo "Official reference solutions have been unlocked and **committed directly into your repository** under the \`Relational_Algebra/solutions/\` folder." >> $GITHUB_STEP_SUMMARY
+            echo "You can also download them as a zip artifact (**reference-solutions**) below." >> $GITHUB_STEP_SUMMARY
           else
             echo "All 9 attempted, but SOLUTIONS_PAYLOAD secret is not set in organization settings."
             echo "### ⚠️ Notice" >> $GITHUB_STEP_SUMMARY

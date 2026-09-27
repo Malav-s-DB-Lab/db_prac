@@ -1,7 +1,7 @@
 # 🍕 Relational Algebra Practice Lab
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Malav-s-DB-Lab/db_prac)
-[![Relational Algebra Autograding](https://github.com/Malav-s-DB-Lab/db_prac/actions/workflows/relational_algebra.yml/badge.svg)](https://github.com/Malav-s-DB-Lab/db_prac/actions/workflows/relational_algebra.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](../../../codespaces/new)
+[![Check Your Grade](https://img.shields.io/badge/Grading-View%20Your%20Score-brightgreen)](../../../actions)
 
 > An interactive, self-paced Relational Algebra problem set featuring automated testing and instant feedback using GitHub Actions autograding.
 > **Curated & Maintained by [Malav's DB Lab](https://github.com/Malav-s-DB-Lab)**
@@ -11,7 +11,7 @@
 ## 🚀 Quick Start Guide
 
 ### 1. Open in Codespaces (Zero Setup)
-Click the badge above or click **Code** &rarr; **Codespaces** &rarr; **Create codespace on main**. This launches a pre-configured cloud development environment with Java 17 ready to go.
+Click **[Open in GitHub Codespaces](../../../codespaces/new)** or click **Code** &rarr; **Codespaces** &rarr; **Create codespace on main**. This launches a pre-configured cloud development environment with Java 17 ready to go.
 
 ### 2. Solve the Problems
 Write your Relational Algebra query for each problem in its corresponding file:
@@ -32,16 +32,14 @@ cd Relational_Algebra
 java -jar ra.jar -i ra-pizza_p1.ra
 ```
 
-### 4. Submit & Get Graded
+### 4. Submit & View Your Personal Grade
 Whenever you push your commits to GitHub, the autograding workflow runs automatically:
 ```bash
 git add .
 git commit -m "Submit problem solutions"
 git push
 ```
-Check your score under the **Actions** tab of the repository!
-
-> 💡 **Tip for Collaborators**: Create your own branch (`git checkout -b your-name-practice`) so your work doesn't overwrite others. Autograding will automatically run on your branch pushes as well!
+👉 **[View Your Grade & Test History](../../../actions)**: Check the **Actions** tab of this repository to view points earned, test outputs, and submission logs for each commit!
 
 ---
 
@@ -127,4 +125,7 @@ Find all pizzerias that serve every pizza eaten by people over 30.
 
 Official solutions are locked until you have submitted an attempt for all 9 problems (`ra-pizza_p1.ra` to `ra-pizza_p9.ra`). 
 
-Once you commit and push your attempts for all 9 questions, the automated workflow verifies completion and unlocks the reference solutions for your review!
+Once you commit and push your attempts for all 9 questions:
+1. The automated autograder verifies all 9 problems are submitted.
+2. It automatically **commits the official reference solutions directly into your repository** under the [`Relational_Algebra/solutions/`](solutions/) folder!
+3. You can also download them as a zip artifact from your latest workflow run in the **Actions** tab.

@@ -1,9 +1,9 @@
 # 🗄️ Database Practice Hub (`db_prac`)
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Malav-s-DB-Lab/db_prac)
-[![Relational Algebra Autograding](https://github.com/Malav-s-DB-Lab/db_prac/actions/workflows/relational_algebra.yml/badge.svg)](https://github.com/Malav-s-DB-Lab/db_prac/actions/workflows/relational_algebra.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](../../codespaces/new)
+[![Check Your Grade](https://img.shields.io/badge/Grading-View%20Your%20Score-brightgreen)](../../actions)
 
-> A modular database practice repository featuring interactive exercises, automated testing, and instant grading feedback.
+> An interactive, self-paced database practice repository featuring automated testing, instant grading, and progress tracking.
 > **Curated & Maintained by [Malav's DB Lab](https://github.com/Malav-s-DB-Lab)**
 
 ---
@@ -19,10 +19,10 @@
 
 ---
 
-## 🚀 How to Practice
+## 🚀 How to Practice (Student Guide)
 
 ### 1. Launch Environment (Zero Setup)
-Click **[Open in GitHub Codespaces](https://codespaces.new/Malav-s-DB-Lab/db_prac)** or click **Code &rarr; Codespaces &rarr; Create codespace on main**. This opens a pre-configured cloud development environment with Java 17 and database tools ready to run.
+Click **[Open in GitHub Codespaces](../../codespaces/new)** or click **Code &rarr; Codespaces &rarr; Create codespace on main**. This opens a pre-configured cloud development environment with Java 17 and database tools ready to run.
 
 ### 2. Choose a Module
 Navigate into the module directory:
@@ -39,22 +39,20 @@ cd Relational_Algebra
 java -jar ra.jar -i ra-pizza_p1.ra
 ```
 
-### 4. Submit & Get Graded
-Commit and push your solutions to GitHub:
+### 4. Submit & View Your Personal Grade
+Whenever you are ready to submit, commit and push your code:
 ```bash
 git add .
 git commit -m "Submit problem solutions"
 git push
 ```
-The automated grading suite will run under the **Actions** tab on GitHub and generate your score!
-
-### 🔓 Unlocking Reference Solutions
-Reference solutions are locked by default to promote independent learning. 
-To unlock the reference solutions:
-* Submit an attempt for **all 9 problems** (`ra-pizza_p1.ra` through `ra-pizza_p9.ra`).
-* Push your code to GitHub.
-* Once the automated check verifies all 9 questions have been attempted, the official reference solutions will automatically unlock!
+👉 **[View Your Grade & Test History](../../actions)**: Check the **Actions** tab of this repository to see your points breakdown (e.g. `Points 9/9`) and test logs for each commit!
 
 ---
 
-> 💡 **Tip for Collaborators & Friends**: Create your own branch (`git checkout -b your-name`) before committing so your solutions remain separate. GitHub Actions autograding will automatically evaluate any branch you push!
+## 🔓 How to Unlock Official Solutions
+To encourage independent problem solving, reference solutions are locked by default:
+1. Submit an attempt for **all 9 problems** (`ra-pizza_p1.ra` through `ra-pizza_p9.ra`). *(They do not all need to be 100% correct&mdash;just attempted!)*
+2. Commit and push your code to GitHub.
+3. The autograding bot will verify that all 9 questions have been attempted, and will **automatically commit the official reference solutions directly into your repository** under the [`Relational_Algebra/solutions/`](Relational_Algebra/solutions/) folder!
+4. You can also download them as a zip artifact from your latest run in the **Actions** tab.
