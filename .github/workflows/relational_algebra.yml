@@ -206,7 +206,7 @@ jobs:
     - name: Check Completion & Unlock Solutions
       if: always()
       env:
-        SOLUTIONS_PAYLOAD: ${{ secrets.SOLUTIONS_PAYLOAD }}
+        SOLUTIONS_PAYLOAD: ${{ secrets.RA_SOLUTIONS_PAYLOAD  }}
       run: |
         python3 -c "
         import os, re, base64, zipfile
