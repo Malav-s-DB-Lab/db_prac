@@ -1,0 +1,12 @@
+{
+  "name": "Relational Algebra Practice Lab",
+  "image": "mcr.microsoft.com/devcontainers/java:1-17-bookworm",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "postCreateCommand": "java -version"
+}

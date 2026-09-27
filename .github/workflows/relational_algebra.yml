@@ -1,25 +1,31 @@
-name: Autograding Tests
-'on':
-- push
-- repository_dispatch
+name: Relational Algebra Autograding
+
+on:
+  push:
+    paths:
+      - 'Relational_Algebra/**'
+      - '.github/workflows/relational_algebra.yml'
+  workflow_dispatch:
+
 permissions:
   checks: write
   actions: read
   contents: read
+
 jobs:
   run-autograding-tests:
     runs-on: ubuntu-latest
-    if: github.actor != 'github-classroom[bot]'
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
     - name: Problem 1
       id: problem-1
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 1
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p1.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p1.ra
         input: ''
         expected-output: |-
           -----
@@ -31,13 +37,14 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Problem 2
       id: problem-2
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 2
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p2.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p2.ra
         input: ''
         expected-output: |-
           -----
@@ -48,13 +55,14 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Problem 3
       id: problem-3
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 3
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p3.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p3.ra
         input: ''
         expected-output: |-
           -----
@@ -66,13 +74,14 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Problem 4
       id: problem-4
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 4
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p4.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p4.ra
         input: ''
         expected-output: |-
           -----
@@ -82,13 +91,14 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Problem 5
       id: problem-5
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 5
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p5.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p5.ra
         input: ''
         expected-output: |-
           -----
@@ -102,13 +112,14 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Problem 6
       id: problem-6
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 6
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p6.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p6.ra
         input: ''
         expected-output: |-
           -----
@@ -120,13 +131,14 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Problem 7
       id: problem-7
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 7
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p7.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p7.ra
         input: ''
         expected-output: |-
           -----
@@ -136,13 +148,14 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Problem 8
       id: problem-8
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 8
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p8.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p8.ra
         input: ''
         expected-output: |-
           -----
@@ -152,13 +165,14 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Problem 9
       id: problem-9
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Problem 9
         setup-command: ''
-        command: java -jar ra.jar -i ra-pizza_p9.ra
+        command: cd Relational_Algebra && java -jar ra.jar -i ra-pizza_p9.ra
         input: ''
         expected-output: |-
           -----
@@ -170,6 +184,7 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 1
+
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
@@ -184,3 +199,55 @@ jobs:
         PROBLEM-9_RESULTS: "${{steps.problem-9.outputs.result}}"
       with:
         runners: problem-1,problem-2,problem-3,problem-4,problem-5,problem-6,problem-7,problem-8,problem-9
+
+    - name: Check Completion & Unlock Solutions
+      if: always()
+      env:
+        SOLUTIONS_PAYLOAD: ${{ secrets.SOLUTIONS_PAYLOAD }}
+      run: |
+        python3 -c "
+        import os, re
+        attempted = 0
+        for i in range(1, 10):
+            path = f'Relational_Algebra/ra-pizza_p{i}.ra'
+            if os.path.exists(path):
+                with open(path, 'r', encoding='utf-8') as f:
+                    code = f.read()
+                code = re.sub(r'/\*.*?\*/', '', code, flags=re.DOTALL)
+                code = re.sub(r'//.*', '', code)
+                if code.strip():
+                    attempted += 1
+        with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+            env_file.write(f'ATTEMPTED_COUNT={attempted}\n')
+        "
+
+        echo "Attempted count: $ATTEMPTED_COUNT / 9"
+
+        if [ "$ATTEMPTED_COUNT" -eq 9 ]; then
+          if [ -n "$SOLUTIONS_PAYLOAD" ]; then
+            echo "All 9 problems attempted! Unlocking solutions..."
+            mkdir -p unlocked_solutions
+            echo "$SOLUTIONS_PAYLOAD" | base64 -d > solutions.zip
+            unzip -q solutions.zip -d unlocked_solutions/
+            echo "UNLOCKED=true" >> $GITHUB_ENV
+            echo "### 🎉 All 9 Problems Attempted!" >> $GITHUB_STEP_SUMMARY
+            echo "Official reference solutions have been unlocked and attached as a downloadable artifact (**reference-solutions**) at the top of this run summary." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "All 9 attempted, but SOLUTIONS_PAYLOAD secret is not set in organization settings."
+            echo "### ⚠️ Notice" >> $GITHUB_STEP_SUMMARY
+            echo "All 9 problems attempted! Contact the instructor to configure the SOLUTIONS_PAYLOAD secret." >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "UNLOCKED=false" >> $GITHUB_ENV
+          echo "### 🔒 Reference Solutions Locked" >> $GITHUB_STEP_SUMMARY
+          echo "Progress: **$ATTEMPTED_COUNT / 9** problems attempted. Submit an attempt for all 9 problems to unlock the reference solutions!" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Upload Solutions Artifact
+      if: env.UNLOCKED == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: reference-solutions
+        path: unlocked_solutions/
+        retention-days: 30
+
