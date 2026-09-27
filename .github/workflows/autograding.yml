@@ -1,0 +1,186 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Problem 1
+      id: problem-1
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 1
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p1.ra
+        input: ''
+        expected-output: |-
+          -----
+          cheese
+          mushroom
+          supreme
+          -----
+          Total number of rows: 3
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Problem 2
+      id: problem-2
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 2
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p2.ra
+        input: ''
+        expected-output: |-
+          -----
+          Amy
+          Hil
+          -----
+          Total number of rows: 2
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Problem 3
+      id: problem-3
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 3
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p3.ra
+        input: ''
+        expected-output: |-
+          -----
+          Little Caesars
+          New York Pizza
+          Straw Hat
+          -----
+          Total number of rows: 3
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Problem 4
+      id: problem-4
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 4
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p4.ra
+        input: ''
+        expected-output: |-
+          -----
+          Little Caesars
+          -----
+          Total number of rows: 1
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Problem 5
+      id: problem-5
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 5
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p5.ra
+        input: ''
+        expected-output: |-
+          -----
+          Amy
+          Ben
+          Dan
+          Eli
+          Gus
+          -----
+          Total number of rows: 5
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Problem 6
+      id: problem-6
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 6
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p6.ra
+        input: ''
+        expected-output: |-
+          -----
+          cheese
+          pepperoni
+          sausage
+          -----
+          Total number of rows: 3
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Problem 7
+      id: problem-7
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 7
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p7.ra
+        input: ''
+        expected-output: |-
+          -----
+          24
+          -----
+          Total number of rows: 1
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Problem 8
+      id: problem-8
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 8
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p8.ra
+        input: ''
+        expected-output: |-
+          -----
+          Chicago Pizza
+          -----
+          Total number of rows: 1
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Problem 9
+      id: problem-9
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Problem 9
+        setup-command: ''
+        command: java -jar ra.jar -i ra-pizza_p9.ra
+        input: ''
+        expected-output: |-
+          -----
+          Chicago Pizza
+          New York Pizza
+          Pizza Hut
+          -----
+          Total number of rows: 3
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        PROBLEM-1_RESULTS: "${{steps.problem-1.outputs.result}}"
+        PROBLEM-2_RESULTS: "${{steps.problem-2.outputs.result}}"
+        PROBLEM-3_RESULTS: "${{steps.problem-3.outputs.result}}"
+        PROBLEM-4_RESULTS: "${{steps.problem-4.outputs.result}}"
+        PROBLEM-5_RESULTS: "${{steps.problem-5.outputs.result}}"
+        PROBLEM-6_RESULTS: "${{steps.problem-6.outputs.result}}"
+        PROBLEM-7_RESULTS: "${{steps.problem-7.outputs.result}}"
+        PROBLEM-8_RESULTS: "${{steps.problem-8.outputs.result}}"
+        PROBLEM-9_RESULTS: "${{steps.problem-9.outputs.result}}"
+      with:
+        runners: problem-1,problem-2,problem-3,problem-4,problem-5,problem-6,problem-7,problem-8,problem-9
