@@ -206,10 +206,16 @@ jobs:
     - name: Check Completion & Unlock Solutions
       if: always()
       env:
-        SOLUTIONS_PAYLOAD: ${{ secrets.RA_SOLUTIONS_PAYLOAD  }}
+        SOLUTIONS_PAYLOAD: ${{ secrets.RA_SOLUTIONS_PAYLOAD }}
       run: |
         python3 -c "
         import os, re, base64, zipfile
+
+        summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+        def log_summary(msg):
+            if summary_path:
+                with open(summary_path, 'a', encoding='utf-8') as f:
+                    f.write(msg + '\n')
 
         # 1. Count attempted problems
         attempted = 0
@@ -227,11 +233,10 @@ jobs:
 
         print(f'Attempted count: {attempted} / 9')
 
-        with open(os.environ['GITHUB_ENV'], 'a') as env_file:
-            env_file.write(f'ATTEMPTED_COUNT={attempted}\n')
-
-        # 2. If 9 attempted, decode solutions payload
+        # 2. Check solutions unlock
         payload = os.environ.get('SOLUTIONS_PAYLOAD', '').strip()
+        unlocked = False
+
         if attempted == 9:
             if payload:
                 try:
@@ -245,48 +250,43 @@ jobs:
                         z.extractall('unlocked_solutions')
                     if os.path.exists('temp_solutions.zip'):
                         os.remove('temp_solutions.zip')
-                    with open(os.environ['GITHUB_ENV'], 'a') as env_file:
-                        env_file.write('UNLOCKED=true\n')
-                    print('Solutions extracted successfully.')
+                    unlocked = True
+                    log_summary('### All 9 Problems Attempted!')
+                    log_summary('Official reference solutions have been unlocked! They are committed into \`Relational_Algebra/solutions/\` and available as a downloadable zip artifact (**reference-solutions**) below.')
                 except Exception as e:
                     print(f'Error extracting solutions: {e}')
-                    with open(os.environ['GITHUB_ENV'], 'a') as env_file:
-                        env_file.write('UNLOCKED=false\n')
+                    log_summary('### Error')
+                    log_summary(f'Failed to extract solutions: {e}')
             else:
-                print('SOLUTIONS_PAYLOAD secret is empty or not set.')
-                with open(os.environ['GITHUB_ENV'], 'a') as env_file:
-                    env_file.write('UNLOCKED=false\n')
+                log_summary('### 🔒 Solutions Locked (External Fork Detected)')
+                log_summary('Great job! You have submitted an attempt for all 9 problems.')
+                log_summary('')
+                log_summary('However, you are running this workflow from an **external fork**. GitHub security automatically restricts forks from accessing the organization\'s encrypted solutions vault.')
+                log_summary('')
+                log_summary('**Want official solution access?** Please contact the repository owner ([@Malav786](https://github.com/Malav786)) to be invited to **Malav\'s DB Lab**!')
         else:
-            with open(os.environ['GITHUB_ENV'], 'a') as env_file:
-                env_file.write('UNLOCKED=false\n')
+            log_summary('### Reference Solutions Locked')
+            log_summary(f'Progress: **{attempted} / 9** problems attempted. Submit an attempt for all 9 problems to unlock the reference solutions!')
+
+        # Set environment for subsequent workflow steps
+        env_path = os.environ.get('GITHUB_ENV')
+        if env_path:
+            with open(env_path, 'a', encoding='utf-8') as f:
+                f.write(f'UNLOCKED=true\n' if unlocked else 'UNLOCKED=false\n')
+                f.write(f'ATTEMPTED_COUNT={attempted}\n')
         "
 
-        if [ "$UNLOCKED" == "true" ]; then
-          # Attempt to commit solutions to the repository branch
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Relational_Algebra/solutions
-          if git diff --staged --quiet; then
-            echo "Solutions already committed."
-          else
-            git commit -m "Unlocked: Official Reference Solutions for all 9 problems"
-            git push origin HEAD:${{ github.ref }} || echo "Direct push skipped; solutions available as artifact."
-          fi
-
-          echo "### All 9 Problems Attempted!" >> $GITHUB_STEP_SUMMARY
-          echo "Official reference solutions have been unlocked! They are committed into \`Relational_Algebra/solutions/\` and available as a downloadable zip artifact (**reference-solutions**) below." >> $GITHUB_STEP_SUMMARY
+    - name: Commit Solutions to Repository
+      if: env.UNLOCKED == 'true'
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add Relational_Algebra/solutions
+        if git diff --staged --quiet; then
+          echo "Solutions already committed."
         else
-          if [ "$ATTEMPTED_COUNT" -eq 9 ]; then
-            echo "### 🔒 Solutions Locked (External Fork Detected)" >> $GITHUB_STEP_SUMMARY
-            echo "Great job! You have submitted an attempt for all 9 problems." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "However, you are running this workflow from an **external fork**. GitHub security automatically restricts forks from accessing the organization's encrypted solutions vault." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Want official solution access?** Please contact the repository owner ([@Malav786](https://github.com/Malav786)) to be invited to **Malav's DB Lab**!" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "### Reference Solutions Locked" >> $GITHUB_STEP_SUMMARY
-            echo "Progress: **$ATTEMPTED_COUNT / 9** problems attempted. Submit an attempt for all 9 problems to unlock the reference solutions!" >> $GITHUB_STEP_SUMMARY
-          fi
+          git commit -m "Unlocked: Official Reference Solutions for all 9 problems"
+          git push origin HEAD:${{ github.ref }} || echo "Direct push skipped; solutions available as artifact."
         fi
 
     - name: Upload Solutions Artifact
